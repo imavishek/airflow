@@ -27,7 +27,7 @@ with models.DAG(
     task1 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t1',
         name='task1',
-        namespace='default',
+        namespace='airflow',
         image='eu.gcr.io/taiyo-239217/dag:fae4887',
         arguments=["AlphaVantage()"],
 		volume=[],

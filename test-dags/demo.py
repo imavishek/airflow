@@ -13,7 +13,7 @@ with models.DAG(
     task1 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t1',
         name='task1',
-        namespace='default',
+        namespace='airflow',
         image='eu.gcr.io/taiyo-239217/dag:fae4886',
         arguments=["AlphaVantage()"],
         in_cluster=True,
@@ -24,7 +24,7 @@ with models.DAG(
     task2 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t2',
         name='task2',
-        namespace='default',
+        namespace='airflow',
         image='eu.gcr.io/taiyo-239217/dag:fae4886',
         arguments=["FRED()"],
         in_cluster=True,
@@ -35,7 +35,7 @@ with models.DAG(
     task3 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t3',
         name='task3',
-        namespace='default',
+        namespace='airflow',
         image='eu.gcr.io/taiyo-239217/dag:fae4886',
         arguments=["TechFeatures()"],
         in_cluster=True,
@@ -46,7 +46,7 @@ with models.DAG(
     task4 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t4',
         name='task4',
-        namespace='default',
+        namespace='airflow',
         image='eu.gcr.io/taiyo-239217/dag:fae4886',
         arguments=["DataAggregation()"],
         in_cluster=True,
