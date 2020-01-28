@@ -1,34 +1,94 @@
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from datetime import datetime, timedelta
+
+
+import os
+
+import json
+
+import yaml
+
+import logging
+
+import datetime
+
+import pandas as pd
+
 from airflow import DAG, AirflowException
+
 from airflow.operators.python_operator import PythonOperator
 
+from Taiyo_Harvesting.toAlphaVantage import StockData
+
+​
+
+​
+
+logger = logging.getLogger(__name__)
+
+​
+
+try:
+
+    logger.info('Reading config file...')
+
+    with open(os.path.join(os.path.dirname(__file__), 'Ansys.yml'), 'r') as f:
+
+        config = yaml.load(f, Loader=yaml.SafeLoader)
+
+        logger.info('Successful in reading config file.')
+
+except Exception as e:
+
+    config = None
+
+    logger.error('Error reading config file. Error: {}'.format(e))
+
+    raise AirflowException("Following exception occurred while reading config file: {}".format(e))
+
+​
+
 default_args = {
-    'owner': 'Airflow',
+
+    'owner': 'airflow',
+
     'depends_on_past': False,
-    'start_date': datetime(2015, 6, 1),
-    'email': ['airflow@example.com'],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-    # 'queue': 'bash_queue',
-    # 'pool': 'backfill',
-    # 'priority_weight': 10,
-    # 'end_date': datetime(2016, 1, 1),
+
+    'start_date': datetime.datetime.today() - datetime.timedelta(days=1),
+
 }
 
-dag = DAG('tutorial', default_args=default_args, schedule_interval=timedelta(days=1))
+​
 
-def print_test():
-	print("test")
+run_time = '{{ ts }}'
 
-task2 = PythonOperator( task_id='AlphaVantage', 
-                            python_callable=print_test, 
-                            provide_context=False, dag=dag)
+​
 
+def AlphaVantageData(**kwargs):
 
+    global config
 
+    FPconfig = config["Fetch Data Layer"]["Alpha Vantage"]
 
-    
+    SDHandle = StockData(ticker=FPconfig["ticker"], frequency=FPconfig["frequency"])
+
+    SDdata = SDHandle.getStockPrices()
+
+    SDdata.sort_values(by=['Date'], inplace=True)
+
+    SDdata.set_index('Date', inplace=True)
+
+    for c in SDdata.columns:
+
+        SDdata[c] = pd.to_numeric(SDdata[c])
+
+    kwargs['ti'].xcom_push(key='AlphaVantage', value=SDdata)
+
+​
+
+with DAG('airflow-pipeline', default_args=default_args, schedule_interval=datetime.timedelta(days=1)) as dag:
+
+    task2 = PythonOperator( task_id='AlphaVantage', 
+
+                            python_callable=AlphaVantageData, 
+
+                            provide_context=True )
+
