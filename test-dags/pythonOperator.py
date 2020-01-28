@@ -6,7 +6,7 @@ import datetime
 import pandas as pd
 from airflow import DAG, AirflowException
 from airflow.operators.python_operator import PythonOperator
-from Taiyo_Harvesting.toAlphaVantage import StockData
+
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +30,7 @@ default_args = {
 run_time = '{{ ts }}'
 
 def AlphaVantageData(**kwargs):
+    from Taiyo_Harvesting.toAlphaVantage import StockData
     global config
     FPconfig = config["Fetch Data Layer"]["Alpha Vantage"]
     SDHandle = StockData(ticker=FPconfig["ticker"], frequency=FPconfig["frequency"])
