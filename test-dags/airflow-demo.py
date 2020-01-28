@@ -16,7 +16,9 @@ with models.DAG(
     task1 = kubernetes_pod_operator.KubernetesPodOperator(
         task_id='t1',
         name='task1',
-        namespace='default',
+        namespace='airflow-dev',
         image='eu.gcr.io/taiyo-239217/dag:fae4887',
-        arguments=["AlphaVantage()"]
+        arguments=["AlphaVantage()"],
+        in_cluster=True,
+        is_delete_operator_pod=True
     )
