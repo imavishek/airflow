@@ -18,7 +18,5 @@ with models.DAG(
         name='task1',
         namespace='default',
         image='eu.gcr.io/taiyo-239217/dag:fae4887',
-        arguments=["AlphaVantage()"],
-        in_cluster=True,
-        is_delete_operator_pod=True
+        arguments=["AlphaVantage()"]
     )
