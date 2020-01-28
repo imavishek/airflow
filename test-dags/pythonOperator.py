@@ -41,7 +41,7 @@ def AlphaVantageData(**kwargs):
         SDdata[c] = pd.to_numeric(SDdata[c])
     kwargs['ti'].xcom_push(key='AlphaVantage', value=SDdata)
 
-with DAG('airflow-pipeline', default_args=default_args, schedule_interval=datetime.timedelta(days=1)) as dag:
+with DAG('airflow', default_args=default_args, schedule_interval=datetime.timedelta(days=1)) as dag:
     task2 = PythonOperator( task_id='AlphaVantage', 
                             python_callable=AlphaVantageData, 
                             provide_context=True )
