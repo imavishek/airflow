@@ -109,7 +109,7 @@ python-highcharts==0.4.2
 python3-openid==3.1.0
 pytz==2019.3
 pytzdata==2019.3
-PyYAML==5.1.2
+PyYAML==5.4
 redis==3.3.11
 requests==2.21.0
 scikit-learn==0.21.3
