@@ -71,7 +71,7 @@ kombu==4.6.7
 lazy-object-proxy==1.4.3
 # lightgbm==2.3.0
 lockfile==0.12.2
-lxml==4.4.2
+lxml==4.9.1
 Mako==1.1.0
 Markdown==2.6.11
 MarkupSafe==1.1.1
